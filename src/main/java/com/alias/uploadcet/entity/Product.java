@@ -116,6 +116,14 @@ public class Product extends Model<Product> {
 
     public static final String PIC_URL = "pic_url";
 
+//    public static final Integer STATUS_NORMAL = 0;
+
+    public static final Integer STATUS_ON_SHELF = 1;
+    public static final Integer STATUS_OFF_SHELF = -1;
+
+
+
+
     @Override
     protected Serializable pkVal() {
         return null;

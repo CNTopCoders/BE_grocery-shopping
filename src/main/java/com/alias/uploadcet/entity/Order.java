@@ -2,6 +2,7 @@ package com.alias.uploadcet.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.time.LocalDateTime;
  * @since 2020-04-14
  */
 @TableName("tb_order")
+@Data
 public class Order extends Model<Order> {
 
     private static final long serialVersionUID=1L;
@@ -39,78 +41,6 @@ public class Order extends Model<Order> {
     private BigDecimal amount;
 
 
-    public String getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(String orderId) {
-        this.orderId = orderId;
-    }
-
-    public LocalDateTime getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(LocalDateTime createTime) {
-        this.createTime = createTime;
-    }
-
-    public Integer getStatus() {
-        return status;
-    }
-
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getExpectDeliverTimeStart() {
-        return expectDeliverTimeStart;
-    }
-
-    public void setExpectDeliverTimeStart(LocalDateTime expectDeliverTimeStart) {
-        this.expectDeliverTimeStart = expectDeliverTimeStart;
-    }
-
-    public LocalDateTime getExpectDeliverTimeEnd() {
-        return expectDeliverTimeEnd;
-    }
-
-    public void setExpectDeliverTimeEnd(LocalDateTime expectDeliverTimeEnd) {
-        this.expectDeliverTimeEnd = expectDeliverTimeEnd;
-    }
-
-    public String getDeliverAddressId() {
-        return deliverAddressId;
-    }
-
-    public void setDeliverAddressId(String deliverAddressId) {
-        this.deliverAddressId = deliverAddressId;
-    }
-
-    public String getDeliverAddress() {
-        return deliverAddress;
-    }
-
-    public void setDeliverAddress(String deliverAddress) {
-        this.deliverAddress = deliverAddress;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public BigDecimal getAmount() {
-        return amount;
-    }
-
-    public void setAmount(BigDecimal amount) {
-        this.amount = amount;
-    }
-
     public static final String ORDER_ID = "order_id";
 
     public static final String CREATE_TIME = "create_time";
@@ -128,6 +58,12 @@ public class Order extends Model<Order> {
     public static final String USER_ID = "user_id";
 
     public static final String AMOUNT = "amount";
+
+    public static final Integer STATUS_CLOSED = 3;
+    public static final Integer STATUS_WAIT_DELIVERY = 1;
+    public static final Integer STATUS_IN_DELIVERY = 2;
+    public static final Integer STATUS_CANCEL = -1;
+    public static final Integer STATUS_NOT_RECEIVED = 0;
 
     @Override
     protected Serializable pkVal() {

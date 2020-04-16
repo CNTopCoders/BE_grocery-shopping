@@ -1,6 +1,7 @@
 package com.alias.uploadcet.service;
 
 import com.alias.uploadcet.entity.Order;
+import com.alias.uploadcet.vo.OrderVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +14,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IOrderService extends IService<Order> {
 
+    Boolean createByVo(OrderVo orderVo);
 }

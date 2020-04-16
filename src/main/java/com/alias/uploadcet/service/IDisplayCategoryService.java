@@ -1,7 +1,7 @@
 package com.alias.uploadcet.service;
 
 import com.alias.uploadcet.dto.CategoryTree;
-import com.alias.uploadcet.entity.Category;
+import com.alias.uploadcet.entity.DisplayCategory;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
@@ -14,7 +14,7 @@ import java.util.List;
  * @author auto-genergator
  * @since 2020-04-14
  */
-public interface ICategoryService extends IService<Category> {
+public interface IDisplayCategoryService extends IService<DisplayCategory> {
 
-    List<CategoryTree> getAsyncTree(String categoryId);
+    List<CategoryTree> getAllDisplayCategoryTrees();
 }
