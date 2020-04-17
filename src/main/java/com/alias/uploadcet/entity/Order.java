@@ -1,5 +1,6 @@
 package com.alias.uploadcet.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
@@ -22,6 +23,7 @@ public class Order extends Model<Order> {
 
     private static final long serialVersionUID=1L;
 
+    @TableId
     private String orderId;
 
     private LocalDateTime createTime;
@@ -64,6 +66,7 @@ public class Order extends Model<Order> {
     public static final Integer STATUS_IN_DELIVERY = 2;
     public static final Integer STATUS_CANCEL = -1;
     public static final Integer STATUS_NOT_RECEIVED = 0;
+    public static final Integer STATUS_DELETED = -2;
 
     @Override
     protected Serializable pkVal() {

@@ -64,6 +64,17 @@ public class ProductServiceImpl extends ServiceImpl<ProductMapper, Product> impl
         }else{
             product.setStatus(Product.STATUS_OFF_SHELF);
         }
+//        product.setUnitPrice(product.getUnitPrice().setScale(2, BigDecimal.ROUND_HALF_UP));
         return product;
     }
+
+//    @Override
+//    public Boolean addStock(Integer count,Product product){
+//        product.setStock();
+//
+//    }
+//    @Override
+//    public Boolean minusStock(Integer count,Product product){
+//
+//    }
 }

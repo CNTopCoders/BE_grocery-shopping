@@ -1,10 +1,12 @@
 package com.alias.uploadcet.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /**
  * <p>
@@ -20,6 +22,7 @@ public class Category extends Model<Category> {
 
     private static final long serialVersionUID=1L;
 
+    @TableId
     private String categoryId;
 
     private String categoryName;
@@ -28,51 +31,14 @@ public class Category extends Model<Category> {
 
     private Integer sort;
 
-    private Integer leaf;
-//    private Integer categoryType;
+    private Boolean leaf;
+    private Integer categoryType;
 
     private Integer level;
 
+    private LocalDateTime createTime;
+    private LocalDateTime updateTime;
 
-    public String getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(String categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getCategoryName() {
-        return categoryName;
-    }
-
-    public void setCategoryName(String categoryName) {
-        this.categoryName = categoryName;
-    }
-
-    public String getParentId() {
-        return parentId;
-    }
-
-    public void setParentId(String parentId) {
-        this.parentId = parentId;
-    }
-
-    public Integer getSort() {
-        return sort;
-    }
-
-    public void setSort(Integer sort) {
-        this.sort = sort;
-    }
-
-    public Integer getLeaf() {
-        return leaf;
-    }
-
-    public void setLeaf(Integer leaf) {
-        this.leaf = leaf;
-    }
 
     public static final String CATEGORY_ID = "category_id";
 

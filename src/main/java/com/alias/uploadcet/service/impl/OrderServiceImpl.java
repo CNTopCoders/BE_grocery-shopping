@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,12 +46,14 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
         order.setStatus(Order.STATUS_NOT_RECEIVED);
         order.setCreateTime(LocalDateTime.now());
         order.setUserId(TokenUtil.getTokenUserId());
-        this.save(order);
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        order.setExpectDeliverTimeStart(LocalDateTime.parse(orderVo.getExpectDeliverTimeStart(),df));
+        order.setExpectDeliverTimeEnd(LocalDateTime.parse(orderVo.getExpectDeliverTimeStart(),df));
+
         List<ProductDetail> productDetails = orderVo.getProductDetails();
         List<OrderDetail> orderDetails = new ArrayList<>();
         BigDecimal amount = new BigDecimal(0).setScale(2, RoundingMode.HALF_UP);
         for(ProductDetail productDetail:productDetails) {
-
                 Product product = productService.getById(productDetail.getProductId());
                 OrderDetail orderDetail = new OrderDetail();
                 orderDetail.setItemCount(productDetail.getCount());
@@ -59,11 +62,22 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, Order> implements
                 orderDetail.setItemUnit(product.getUnit());
                 orderDetail.setItemUnitPrice(product.getUnitPrice());
                 orderDetails.add(orderDetail);
-                amount.add(product.getUnitPrice().multiply(new BigDecimal(productDetail.getCount())));
+                if(product.getStock() - productDetail.getCount() < 0){
+                    return false;
+                }
+                product.setStock(product.getStock() - productDetail.getCount());
+                amount = amount.add(product.getUnitPrice().multiply(new BigDecimal(productDetail.getCount())));
+                productService.updateById(product);
 //                amount = amount + product.getUnitPrice()
         }
         order.setAmount(amount);
+        this.save(order);
+        for (OrderDetail orderDetail : orderDetails) {
+            orderDetail.setOrderId(order.getOrderId());
+        }
         this.updateById(order);
         return orderDetailService.saveBatch(orderDetails);
     }
+
+
 }

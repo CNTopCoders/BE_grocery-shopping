@@ -1,6 +1,5 @@
 package com.alias.uploadcet.config;
 
-import com.alias.uploadcet.intercepter.AuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -27,8 +26,9 @@ public class MyMvcConfig implements WebMvcConfigurer {
 //                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**")
 //                .excludePathPatterns("/index.html","/","/user/login","/static/**","/webjars/**");
                 // /**  表示拦截所有路径下的所有请求
-                registry.addInterceptor(new AuthenticationInterceptor())
-                        .addPathPatterns("/user/**");
+//                registry.addInterceptor(new AuthenticationInterceptor())
+//                        .addPathPatterns("/**");
+//                        .excludePathPatterns("/swagger/**");
             }
         };
     }

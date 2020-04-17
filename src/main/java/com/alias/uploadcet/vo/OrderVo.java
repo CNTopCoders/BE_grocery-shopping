@@ -1,8 +1,9 @@
 package com.alias.uploadcet.vo;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -11,11 +12,13 @@ import java.util.List;
  * @Date: 2020-04-17 00:02
  */
 @Data
+@ApiModel
 public class OrderVo {
 
-    private LocalDateTime expectDeliverTimeStart;
-
-    private LocalDateTime expectDeliverTimeEnd;
+    @ApiModelProperty(value = "期望配送时间段开始 格式yyyy-MM-dd HH:mm:ss")
+    private String expectDeliverTimeStart;
+    @ApiModelProperty(value = "期望配送时间段结束 格式yyyy-MM-dd HH:mm:ss")
+    private String expectDeliverTimeEnd;
 
     private String deliverAddressId;
 
