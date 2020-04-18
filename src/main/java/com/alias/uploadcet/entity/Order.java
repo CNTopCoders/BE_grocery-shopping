@@ -42,6 +42,8 @@ public class Order extends Model<Order> {
 
     private BigDecimal amount;
 
+    private String comment;
+
 
     public static final String ORDER_ID = "order_id";
 

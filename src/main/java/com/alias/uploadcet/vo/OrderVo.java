@@ -26,4 +26,6 @@ public class OrderVo {
 
     private List<ProductDetail> productDetails;
 
+    private String comment;
+
 }

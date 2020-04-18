@@ -104,6 +104,7 @@ public class UserController {
             loginInfo.setUserName(user.getUserName());
             Map<String,Object> map = new HashMap<>();
             map.put("token",token);
+            userService.save(user);
             return BaseResponseBuilder.createBaseResponse(loginInfo);
         }catch (Exception e){
             e.printStackTrace();
