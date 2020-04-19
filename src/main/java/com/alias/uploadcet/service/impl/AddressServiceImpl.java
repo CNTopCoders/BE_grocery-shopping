@@ -5,9 +5,12 @@ import com.alias.uploadcet.mapper.AddressMapper;
 import com.alias.uploadcet.service.IAddressService;
 import com.alias.uploadcet.vo.AddressVo;
 import com.alias.uploadcet.vo.ModifyAddressVo;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * <p>
@@ -38,6 +41,14 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
         }else{
             throw new RuntimeException("不存在该收货地址");
         }
+    }
+
+    @Override
+    public List<Address> getAddressByUserId(String userId){
+        QueryWrapper wrapper = new QueryWrapper();
+        wrapper.eq(Address.USER_ID,userId);
+        List<Address> addresses = this.list(wrapper);
+        return addresses;
     }
 
 }

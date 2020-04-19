@@ -5,6 +5,8 @@ import com.alias.uploadcet.vo.AddressVo;
 import com.alias.uploadcet.vo.ModifyAddressVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+
 /**
  * <p>
  *  服务类
@@ -18,4 +20,6 @@ public interface IAddressService extends IService<Address> {
     Boolean createAddressByVo(AddressVo addressVo);
 
     Boolean updateAddressByVo(ModifyAddressVo modifyAddressVo);
+
+    List<Address> getAddressByUserId(String userId);
 }
