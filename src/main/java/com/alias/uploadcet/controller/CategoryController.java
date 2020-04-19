@@ -8,6 +8,7 @@ import com.alias.uploadcet.service.ICategoryService;
 import com.alias.uploadcet.service.IDisplayCategoryService;
 import com.alias.uploadcet.util.BaseResponseBuilder;
 import com.alias.uploadcet.vo.CategoryVo;
+import com.alias.uploadcet.vo.ModifyCategoryVo;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -59,9 +60,9 @@ public class CategoryController {
     }
     @PostMapping("/modify")
     @ApiOperation("修改一个类别")
-    public BaseResponse<Boolean> modifyCategory(@RequestBody @ApiParam(value = "类别实体",required = true) String categoryId,String categoryName){
-        Category category = categoryService.getById(categoryId);
-        category.setCategoryName(categoryName);
+    public BaseResponse<Boolean> modifyCategory(@RequestBody @ApiParam(value = "修改类别实体",required = true) ModifyCategoryVo modifyCategoryVo){
+        Category category = categoryService.getById(modifyCategoryVo.getCategoryId());
+        category.setCategoryName(modifyCategoryVo.getCategoryName());
         category.setUpdateTime(LocalDateTime.now());
         return BaseResponseBuilder.createBaseResponse(categoryService.updateById(category));
     }

@@ -11,8 +11,11 @@ import com.alias.uploadcet.service.IUserService;
 import com.alias.uploadcet.util.BaseResponseBuilder;
 import com.alias.uploadcet.util.NameUtil;
 import com.alias.uploadcet.util.TokenUtil;
+import com.alias.uploadcet.vo.UserVo;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -21,10 +24,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -40,6 +40,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/user")
+@Slf4j
 public class UserController {
     @Autowired
     IUserService userService;
@@ -82,6 +83,7 @@ public class UserController {
                 baseResponse.setCode(-1);
                 return baseResponse;
             }
+            log.info("code = "+registerDto.getCode());
             JSONObject jsonObject = getWxUserOpenid(registerDto.getCode(), Constant.appId, Constant.appSecret);
             if(jsonObject == null){
                 BaseResponse<LoginInfo> baseResponse = new BaseResponse<>();
@@ -98,6 +100,7 @@ public class UserController {
                 user.setLastLoginTime(LocalDateTime.now());
                 user.setOpenId(openId);
             }
+            log.info("user = "+user);
             String token = generateToken(user, response);
             LoginInfo loginInfo = new LoginInfo();
             loginInfo.setToken(token);
@@ -115,7 +118,7 @@ public class UserController {
             return baseResponse;
         }
     }
-    @RequestMapping("/userInfo")
+    @GetMapping("/userInfo")
     public BaseResponse<User> getUserInfo(HttpServletRequest request){
 //        String token = request.getHeader("token");
         String userId = TokenUtil.getTokenUserId();
@@ -128,6 +131,11 @@ public class UserController {
         cookie.setPath("/");
         response.addCookie(cookie);
         return token;
+    }
+    @ApiOperation("获取一个token测试")
+    @PostMapping("/getOneTestToken")
+    public String getOneTestToken(@RequestBody @ApiParam UserVo user){
+        return tokenService.getTokenByParam(user.getUserId(),user.getOpenId());
     }
     //获取openid
     public static JSONObject getWxUserOpenid(String code, String APPID, String APPSecret) {

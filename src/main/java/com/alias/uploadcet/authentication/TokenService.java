@@ -23,4 +23,13 @@ public class TokenService {
                 .sign(Algorithm.HMAC256(user.getOpenId()));
         return token;
     }
+    public String getTokenByParam(String userId,String openId) {
+        Date start = new Date();
+        long currentTime = System.currentTimeMillis() + 60* 60 * 1000;//一小时有效时间
+        Date end = new Date(currentTime);
+        String token;
+        token = JWT.create().withAudience(userId).withIssuedAt(start).withExpiresAt(end)
+                .sign(Algorithm.HMAC256(openId));
+        return token;
+    }
 }

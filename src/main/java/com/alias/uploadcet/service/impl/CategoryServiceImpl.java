@@ -49,10 +49,12 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
     public Boolean createCategoryByVo(CategoryVo categoryVo){
         Category category = new Category();
         if(StringUtils.isEmpty(categoryVo.getParentId())){
-            category.setParentId("");
             category.setLevel(1);
         }else{
             Category parent = this.getById(categoryVo.getParentId());
+            if(parent==null){
+                throw new RuntimeException("父级类别不存在");
+            }
             category.setParentId(categoryVo.getParentId());
             category.setLevel(parent.getLevel()+1);
             parent.setLeaf(false);
@@ -68,7 +70,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public List<CategoryTree> getAsyncTree(String categoryId){
-        if("".equals(categoryId)){
+        if(StringUtils.isEmpty(categoryId)||"null".equals(categoryId)){
             return this.getRootCategory();
         }
         return getChildrenCategory(categoryId);
@@ -77,7 +79,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     private List<CategoryTree> getRootCategory(){
         QueryWrapper<Category> wrapper = new QueryWrapper<>();
-        List<Category> categories = this.list(wrapper.isNull(Category.PARENT_ID));
+        wrapper.isNull(Category.PARENT_ID);
+        wrapper.or().eq(Category.PARENT_ID,"");
+        List<Category> categories = this.list(wrapper);
         return judgeLeafCategoryTrees(categories);
     }
 
@@ -85,7 +89,8 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         QueryWrapper<Category> wrapper;
         List<CategoryTree> categoryTrees = categories.stream().map(e->convertToCategoryTree(e)).collect(Collectors.toList());
         wrapper = new QueryWrapper<>();
-        wrapper.in(Category.PARENT_ID,categories.stream().map(Category::getCategoryId).collect(Collectors.toList()));
+        List<String> parentIds = categories.stream().map(Category::getCategoryId).collect(Collectors.toList());
+        wrapper.in(Category.PARENT_ID,parentIds);
         List<Category> childrenList = this.list(wrapper);
         Set<String> childrenIds = childrenList.stream().map(e->e.getCategoryId()).collect(Collectors.toSet());
         Map<String,Category> childMap = new HashMap<>();

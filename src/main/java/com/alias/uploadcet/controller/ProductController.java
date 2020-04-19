@@ -4,9 +4,11 @@ import com.alias.uploadcet.dto.BaseResponse;
 import com.alias.uploadcet.entity.Product;
 import com.alias.uploadcet.service.IProductService;
 import com.alias.uploadcet.util.BaseResponseBuilder;
+import com.alias.uploadcet.vo.ModifyProductVo;
 import com.alias.uploadcet.vo.ProductVo;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -72,11 +74,13 @@ private IProductService productService;
 
     @PostMapping("/modify")
     @ApiOperation("修改单个商品")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(name = "productVo", value = "商品信息"),
-//    })
-    public BaseResponse<Boolean> modifyProduct(@RequestBody @ApiParam(value = "商品信息") ProductVo productVo){
-        return BaseResponseBuilder.createBaseResponse(productService.insertByVo(productVo));
+    public BaseResponse<Boolean> modifyProduct(@RequestBody @ApiParam(value = "商品信息") ModifyProductVo modifyProductVo){
+        Product product = productService.getById(modifyProductVo.getProductId());
+        if(product==null){
+            throw new RuntimeException("商品不存在");
+        }
+        BeanUtils.copyProperties(modifyProductVo,product);
+        return BaseResponseBuilder.createBaseResponse(productService.updateById(product));
     }
 
     @PostMapping("/onShelf")

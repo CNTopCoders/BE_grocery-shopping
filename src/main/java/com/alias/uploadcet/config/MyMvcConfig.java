@@ -4,6 +4,7 @@ import com.alias.uploadcet.intercepter.AuthenticationInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
@@ -13,7 +14,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
  */
 @Configuration
 public class MyMvcConfig implements WebMvcConfigurer {
-
+    @Bean
+    public AuthenticationInterceptor authenticationInterceptor() {
+        return new AuthenticationInterceptor();
+    }
     //所有的WebMvcConfigurerAdapter组件都会一起起作用
     @Bean //将组件注册在容器中
     public WebMvcConfigurer webMvcConfigurerAdapter(){
@@ -29,9 +33,18 @@ public class MyMvcConfig implements WebMvcConfigurer {
                 // /**  表示拦截所有路径下的所有请求
                 registry.addInterceptor(new AuthenticationInterceptor())
                         .addPathPatterns("/**")
-                        .excludePathPatterns("/user/registerOrLogin");
+                        .excludePathPatterns("/user/registerOrLogin","/user/getOneTestToken","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**")
+                ;
             }
         };
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("swagger-ui.html")
+                .addResourceLocations("classpath:/META-INF/resources/");
+        registry.addResourceHandler("/webjars/**")
+                .addResourceLocations("classpath:/META-INF/resources/webjars/");
     }
 
 }

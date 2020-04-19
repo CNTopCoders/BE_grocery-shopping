@@ -1,6 +1,8 @@
 package com.alias.uploadcet.service;
 
 import com.alias.uploadcet.entity.Address;
+import com.alias.uploadcet.vo.AddressVo;
+import com.alias.uploadcet.vo.ModifyAddressVo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 /**
@@ -13,4 +15,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IAddressService extends IService<Address> {
 
+    Boolean createAddressByVo(AddressVo addressVo);
+
+    Boolean updateAddressByVo(ModifyAddressVo modifyAddressVo);
 }

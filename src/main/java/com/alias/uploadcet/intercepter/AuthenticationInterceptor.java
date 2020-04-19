@@ -7,12 +7,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Method;
@@ -22,13 +24,18 @@ import java.lang.reflect.Method;
  * @Author : ZGS
  * @Date: 2020-04-13 00:07
  */
-@Component
+//@Component
+@Slf4j
 public class AuthenticationInterceptor implements HandlerInterceptor {
-    @Autowired
+    @Resource
     private IUserService userService;
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object object) throws Exception {
+        if(userService==null) {
+            WebApplicationContext cxt = WebApplicationContextUtils.getWebApplicationContext(httpServletRequest.getSession().getServletContext());
+            userService = (IUserService) cxt.getBean(IUserService.class);
+        }
         String token = httpServletRequest.getHeader("token");// 从 http 请求头中取出 token
         // 如果不是映射到方法直接通过
 //        if(!(object instanceof HandlerMethod)){
@@ -64,11 +71,12 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 throw new RuntimeException("用户不存在，请重新登录");
             }
             // 验证 token
-            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getPassword())).build();
+            JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getOpenId())).build();
             try {
                 jwtVerifier.verify(token);
             } catch (JWTVerificationException e) {
-                throw new RuntimeException("401");
+                log.error(e.getMessage());
+                throw new RuntimeException(e.getMessage());
             }
         }
         return true;
