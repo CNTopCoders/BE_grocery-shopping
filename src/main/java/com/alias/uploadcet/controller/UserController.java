@@ -5,6 +5,7 @@ import com.alias.uploadcet.authentication.TokenService;
 import com.alias.uploadcet.constant.Constant;
 import com.alias.uploadcet.dto.BaseResponse;
 import com.alias.uploadcet.dto.LoginInfo;
+import com.alias.uploadcet.dto.RegisterAdminDto;
 import com.alias.uploadcet.dto.RegisterDto;
 import com.alias.uploadcet.entity.User;
 import com.alias.uploadcet.service.IUserService;
@@ -107,6 +108,33 @@ public class UserController {
             loginInfo.setUserName(user.getUserName());
             Map<String,Object> map = new HashMap<>();
             map.put("token",token);
+            userService.save(user);
+            return BaseResponseBuilder.createBaseResponse(loginInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            BaseResponse<LoginInfo> baseResponse = new BaseResponse<>();
+            baseResponse.setMessage(e.getMessage());
+            baseResponse.setData(null);
+            baseResponse.setCode(-1);
+            return baseResponse;
+        }
+    }
+
+    @ApiOperation(value = "注册管理员", notes = "注册管理员")
+    @RequestMapping(value = "/registerAdmin" ,method = RequestMethod.POST)
+    public BaseResponse<LoginInfo> registerAdmin(@RequestBody(required = true) RegisterAdminDto registerDto, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            User user = new User();
+            user.setUserName(registerDto.getUserName());
+            user.setPassword(registerDto.getPassword());
+            user.setLastLoginTime(LocalDateTime.now());
+            user.setRoleId(2);
+            log.info("user = "+user);
+            String token = generateToken(user, response);
+            LoginInfo loginInfo = new LoginInfo();
+            loginInfo.setToken(token);
+            loginInfo.setUserName(user.getUserName());
+
             userService.save(user);
             return BaseResponseBuilder.createBaseResponse(loginInfo);
         }catch (Exception e){

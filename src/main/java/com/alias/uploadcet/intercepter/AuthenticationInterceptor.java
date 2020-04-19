@@ -1,6 +1,8 @@
 package com.alias.uploadcet.intercepter;
 
 import com.alias.uploadcet.entity.User;
+import com.alias.uploadcet.enums.ErrorCodeEnum;
+import com.alias.uploadcet.exception.BaseRuntimeException;
 import com.alias.uploadcet.service.IUserService;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
@@ -76,7 +78,7 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
                 jwtVerifier.verify(token);
             } catch (JWTVerificationException e) {
                 log.error(e.getMessage());
-                throw new RuntimeException(e.getMessage());
+                throw new BaseRuntimeException(ErrorCodeEnum.ERROR_CODE_LOGIN_EXPIRE);
             }
         }
         return true;
