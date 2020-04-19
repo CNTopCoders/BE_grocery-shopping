@@ -3,17 +3,16 @@ package com.alias.uploadcet.controller;
 
 import com.alias.uploadcet.authentication.TokenService;
 import com.alias.uploadcet.constant.Constant;
-import com.alias.uploadcet.dto.BaseResponse;
-import com.alias.uploadcet.dto.LoginInfo;
-import com.alias.uploadcet.dto.RegisterAdminDto;
-import com.alias.uploadcet.dto.RegisterDto;
+import com.alias.uploadcet.dto.*;
 import com.alias.uploadcet.entity.User;
+import com.alias.uploadcet.exception.BaseRuntimeException;
 import com.alias.uploadcet.service.IUserService;
 import com.alias.uploadcet.util.BaseResponseBuilder;
 import com.alias.uploadcet.util.NameUtil;
 import com.alias.uploadcet.util.TokenUtil;
 import com.alias.uploadcet.vo.UserVo;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
@@ -75,6 +74,7 @@ public class UserController {
 //    }
     @ApiOperation(value = "注册或登录", notes = "注册或登录")
     @RequestMapping(value = "/registerOrLogin" ,method = RequestMethod.POST)
+    @CrossOrigin(origins = "*",maxAge = 3600)
     public BaseResponse<LoginInfo> registerOrLogin(@RequestBody(required = true)RegisterDto registerDto, HttpServletRequest request, HttpServletResponse response) {
         try {
             if(StringUtils.isEmpty(registerDto.getCode())){
@@ -122,9 +122,17 @@ public class UserController {
 
     @ApiOperation(value = "注册管理员", notes = "注册管理员")
     @RequestMapping(value = "/registerAdmin" ,method = RequestMethod.POST)
+    @CrossOrigin(origins = "*",maxAge = 3600)
     public BaseResponse<LoginInfo> registerAdmin(@RequestBody(required = true) RegisterAdminDto registerDto, HttpServletRequest request, HttpServletResponse response) {
         try {
-            User user = new User();
+            if(StringUtils.isEmpty(registerDto.getUserName())||StringUtils.isEmpty(registerDto.getPassword())){
+                throw new BaseRuntimeException("用户名密码不能为空！");
+            }
+            User user = userService.getOne(new QueryWrapper<User>().eq(User.USER_NAME,registerDto.getUserName()));
+            if(user!=null){
+                throw new BaseRuntimeException("该用户已存在！");
+            }
+            user = new User();
             user.setUserName(registerDto.getUserName());
             user.setPassword(registerDto.getPassword());
             user.setLastLoginTime(LocalDateTime.now());
@@ -137,6 +145,39 @@ public class UserController {
 
             userService.save(user);
             return BaseResponseBuilder.createBaseResponse(loginInfo);
+        }catch (Exception e){
+            e.printStackTrace();
+            BaseResponse<LoginInfo> baseResponse = new BaseResponse<>();
+            baseResponse.setMessage(e.getMessage());
+            baseResponse.setData(null);
+            baseResponse.setCode(-1);
+            return baseResponse;
+        }
+    }
+    @ApiOperation(value = "注册管理员", notes = "注册管理员")
+    @RequestMapping(value = "/loginAdmin" ,method = RequestMethod.POST)
+    @CrossOrigin(origins = "*",maxAge = 3600)
+    public BaseResponse<LoginInfo> loginAdmin(@RequestBody(required = true) LoginAdminDto registerDto, HttpServletRequest request, HttpServletResponse response) {
+        try {
+            QueryWrapper wrapper = new QueryWrapper();
+            wrapper.eq(User.USER_NAME,registerDto.getUserName());
+            wrapper.eq(User.PASSWORD,registerDto.getPassword());
+            User user = this.userService.getOne(wrapper);
+            if(user!=null){
+                String token = generateToken(user, response);
+                user.setLastLoginTime(LocalDateTime.now());
+                LoginInfo loginInfo = new LoginInfo();
+                loginInfo.setToken(token);
+                loginInfo.setUserName(user.getUserName());
+                userService.updateById(user);
+                return BaseResponseBuilder.createBaseResponse(loginInfo);
+            }else{
+                BaseResponse<LoginInfo> baseResponse = new BaseResponse<>();
+                baseResponse.setMessage("用户名或密码错误");
+                baseResponse.setData(null);
+                baseResponse.setCode(-1);
+                return baseResponse;
+            }
         }catch (Exception e){
             e.printStackTrace();
             BaseResponse<LoginInfo> baseResponse = new BaseResponse<>();
