@@ -1,24 +1,32 @@
 package com.alias.uploadcet.entity;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author auto-genergator
  * @since 2020-04-14
  */
 @TableName("tb_order_detail")
+@Entity
+@Table(name="tb_order_detail")
 public class OrderDetail extends Model<OrderDetail> {
 
     private static final long serialVersionUID=1L;
 
+    @Id
+    @TableId
     private String orderId;
 
     private String itemOriginName;

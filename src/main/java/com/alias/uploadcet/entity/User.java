@@ -4,11 +4,14 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author jobob
@@ -16,10 +19,13 @@ import java.time.LocalDateTime;
  */
 @Data
 @TableName("tb_user")
+@Entity
+@Table(name="tb_user")
 public class User {
 
     private static final long serialVersionUID = 1L;
     @TableId
+    @Id
     private String userId;
 
     private String userName;

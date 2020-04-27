@@ -12,13 +12,11 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -70,7 +68,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public List<CategoryTree> getAsyncTree(String categoryId){
-        if(StringUtils.isEmpty(categoryId)||"null".equals(categoryId)){
+        if(StringUtils.isEmpty(categoryId)||"null".equals(categoryId)||"0".equals(categoryId)){
             return this.getRootCategory();
         }
         return getChildrenCategory(categoryId);
@@ -82,6 +80,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         wrapper.isNull(Category.PARENT_ID);
         wrapper.or().eq(Category.PARENT_ID,"");
         List<Category> categories = this.list(wrapper);
+        if(CollectionUtils.isEmpty(categories)){
+            return new ArrayList<>();
+        }
         return judgeLeafCategoryTrees(categories);
     }
 

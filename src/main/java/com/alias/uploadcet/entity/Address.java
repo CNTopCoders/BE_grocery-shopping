@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author auto-genergator
@@ -18,11 +21,14 @@ import java.time.LocalDateTime;
  */
 @TableName("tb_address")
 @Data
+@Table(name="tb_address")
+@Entity
 public class Address extends Model<Address> {
 
     private static final long serialVersionUID=1L;
 
     @TableId
+    @Id
     private String addressId;
 
     private String userId;

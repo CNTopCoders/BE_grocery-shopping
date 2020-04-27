@@ -100,6 +100,7 @@ public class UserController {
                 user.setUserName(NameUtil.getStringRandom(10));
                 user.setLastLoginTime(LocalDateTime.now());
                 user.setOpenId(openId);
+                user.setRoleId(1);
             }
             log.info("user = "+user);
             String token = generateToken(user, response);

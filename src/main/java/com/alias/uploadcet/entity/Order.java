@@ -5,13 +5,16 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.activerecord.Model;
 import lombok.Data;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
  * <p>
- * 
+ *
  * </p>
  *
  * @author auto-genergator
@@ -19,11 +22,14 @@ import java.time.LocalDateTime;
  */
 @TableName("tb_order")
 @Data
+@Entity
+@Table(name="tb_order")
 public class Order extends Model<Order> {
 
     private static final long serialVersionUID=1L;
 
     @TableId
+    @Id
     private String orderId;
 
     private LocalDateTime createTime;

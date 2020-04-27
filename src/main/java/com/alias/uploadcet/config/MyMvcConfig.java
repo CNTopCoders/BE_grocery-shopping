@@ -31,10 +31,10 @@ public class MyMvcConfig implements WebMvcConfigurer {
 //                registry.addInterceptor(new LoginHandlerInterceptor()).addPathPatterns("/**")
 //                .excludePathPatterns("/index.html","/","/user/login","/static/**","/webjars/**");
                 // /**  表示拦截所有路径下的所有请求
-                registry.addInterceptor(new AuthenticationInterceptor())
-                        .addPathPatterns("/**")
-                        .excludePathPatterns("/user/registerOrLogin","/user/loginAdmin","/ms/**","/index.html","/user/registerAdmin","/user/getOneTestToken","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**")
-                ;
+//                registry.addInterceptor(new AuthenticationInterceptor())
+//                        .addPathPatterns("/**")
+//                        .excludePathPatterns("/user/registerOrLogin","/user/loginAdmin","/ms/**","/index.html","/user/registerAdmin","/user/getOneTestToken","/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**")
+//                ;
             }
         };
     }
