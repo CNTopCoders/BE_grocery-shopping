@@ -1,6 +1,7 @@
 package com.alias.uploadcet.service.impl;
 
 import com.alias.uploadcet.entity.Address;
+import com.alias.uploadcet.exception.BaseRuntimeException;
 import com.alias.uploadcet.mapper.AddressMapper;
 import com.alias.uploadcet.service.IAddressService;
 import com.alias.uploadcet.vo.AddressVo;
@@ -39,7 +40,7 @@ public class AddressServiceImpl extends ServiceImpl<AddressMapper, Address> impl
             BeanUtils.copyProperties(modifyAddressVo,address);
             return this.save(address);
         }else{
-            throw new RuntimeException("不存在该收货地址");
+            throw new BaseRuntimeException("不存在该收货地址");
         }
     }
 

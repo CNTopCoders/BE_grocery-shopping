@@ -9,6 +9,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
@@ -58,19 +59,21 @@ public class AuthenticationInterceptor implements HandlerInterceptor {
 //            UserLoginToken userLoginToken = method.getAnnotation(UserLoginToken.class);
 //            if (userLoginToken.required()) {
             // 执行认证
+            log.info("token="+token);
             if (token == null) {
-                throw new RuntimeException("无token，请重新登录");
+                throw new BaseRuntimeException("无token，请重新登录");
             }
             // 获取 token 中的 user id
             String userId;
             try {
-                userId = JWT.decode(token).getAudience().get(0);
+                DecodedJWT decodedJWT = JWT.decode(token);
+                userId = decodedJWT.getAudience().get(0);
             } catch (JWTDecodeException j) {
-                throw new RuntimeException("401");
+                throw new BaseRuntimeException("token校验失败！");
             }
             User user = userService.getById(userId);
             if (user == null) {
-                throw new RuntimeException("用户不存在，请重新登录");
+                throw new BaseRuntimeException("用户不存在，请重新登录");
             }
             // 验证 token
             JWTVerifier jwtVerifier = JWT.require(Algorithm.HMAC256(user.getOpenId())).build();

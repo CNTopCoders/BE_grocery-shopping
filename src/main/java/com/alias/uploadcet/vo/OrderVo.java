@@ -20,6 +20,9 @@ public class OrderVo {
     @ApiModelProperty(value = "期望配送时间段结束 格式yyyy-MM-dd HH:mm:ss")
     private String expectDeliverTimeEnd;
 
+//    @ApiModelProperty(value = "期望配送时间段 格式yyyy-MM-dd HH:mm:ss")
+//    private String expectDeliverTimeEnd;
+
     private String deliverAddressId;
 
     private String deliverAddress;

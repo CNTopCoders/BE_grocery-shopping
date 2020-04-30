@@ -2,6 +2,7 @@ package com.alias.uploadcet.controller;
 
 import com.alias.uploadcet.dto.BaseResponse;
 import com.alias.uploadcet.entity.Product;
+import com.alias.uploadcet.exception.BaseRuntimeException;
 import com.alias.uploadcet.service.IProductService;
 import com.alias.uploadcet.util.BaseResponseBuilder;
 import com.alias.uploadcet.vo.ModifyProductVo;
@@ -77,7 +78,7 @@ private IProductService productService;
     public BaseResponse<Boolean> modifyProduct(@RequestBody @ApiParam(value = "商品信息") ModifyProductVo modifyProductVo){
         Product product = productService.getById(modifyProductVo.getProductId());
         if(product==null){
-            throw new RuntimeException("商品不存在");
+            throw new BaseRuntimeException("商品不存在");
         }
         BeanUtils.copyProperties(modifyProductVo,product);
         return BaseResponseBuilder.createBaseResponse(productService.updateById(product));

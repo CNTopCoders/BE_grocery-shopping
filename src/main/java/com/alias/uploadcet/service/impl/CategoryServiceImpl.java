@@ -4,6 +4,7 @@ package com.alias.uploadcet.service.impl;
 import com.alias.uploadcet.dto.CategoryTree;
 import com.alias.uploadcet.entity.Category;
 import com.alias.uploadcet.entity.Product;
+import com.alias.uploadcet.exception.BaseRuntimeException;
 import com.alias.uploadcet.mapper.CategoryMapper;
 import com.alias.uploadcet.service.ICategoryService;
 import com.alias.uploadcet.service.IProductService;
@@ -51,7 +52,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
         }else{
             Category parent = this.getById(categoryVo.getParentId());
             if(parent==null){
-                throw new RuntimeException("父级类别不存在");
+                throw new BaseRuntimeException("父级类别不存在");
             }
             category.setParentId(categoryVo.getParentId());
             category.setLevel(parent.getLevel()+1);

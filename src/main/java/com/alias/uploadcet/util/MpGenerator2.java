@@ -1,5 +1,6 @@
 package com.alias.uploadcet.util;
 
+import com.alias.uploadcet.exception.BaseRuntimeException;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.*;
@@ -43,7 +44,7 @@ public class MpGenerator2 {
         String outPut = "E:\\output";
 //        String outPut="E:\\intellij_workspace\\mybatis-test2\\main-bussiness\\src\\main\\";
         if (StringUtils.isEmpty(outPut)) {
-            throw new RuntimeException("输出目录不能为空！");
+            throw new BaseRuntimeException("输出目录不能为空！");
         }
         // 全局配置
         GlobalConfig gc = new GlobalConfig();

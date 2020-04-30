@@ -11,6 +11,7 @@ import com.alias.uploadcet.util.BaseResponseBuilder;
 import com.alias.uploadcet.util.NameUtil;
 import com.alias.uploadcet.util.TokenUtil;
 import com.alias.uploadcet.vo.UserVo;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.ApiOperation;
@@ -77,6 +78,8 @@ public class UserController {
     @CrossOrigin(origins = "*",maxAge = 3600)
     public BaseResponse<LoginInfo> registerOrLogin(@RequestBody(required = true)RegisterDto registerDto, HttpServletRequest request, HttpServletResponse response) {
         try {
+            log.info("调用了登录接口");
+            log.info(JSON.toJSONString(registerDto));
             if(StringUtils.isEmpty(registerDto.getCode())){
                 BaseResponse<LoginInfo> baseResponse = new BaseResponse<>();
                 baseResponse.setMessage("code不能为空");
@@ -86,6 +89,7 @@ public class UserController {
             }
             log.info("code = "+registerDto.getCode());
             JSONObject jsonObject = getWxUserOpenid(registerDto.getCode(), Constant.appId, Constant.appSecret);
+            log.info("根据code获取到用户信息"+jsonObject.toJSONString());
             if(jsonObject == null){
                 BaseResponse<LoginInfo> baseResponse = new BaseResponse<>();
                 baseResponse.setMessage("获取openId失败");
@@ -101,6 +105,8 @@ public class UserController {
                 user.setLastLoginTime(LocalDateTime.now());
                 user.setOpenId(openId);
                 user.setRoleId(1);
+                user.setPassword(user.getOpenId());
+                userService.saveOrUpdate(user);
             }
             log.info("user = "+user);
             String token = generateToken(user, response);
@@ -109,7 +115,7 @@ public class UserController {
             loginInfo.setUserName(user.getUserName());
             Map<String,Object> map = new HashMap<>();
             map.put("token",token);
-            userService.save(user);
+            userService.saveOrUpdate(user);
             return BaseResponseBuilder.createBaseResponse(loginInfo);
         }catch (Exception e){
             e.printStackTrace();
